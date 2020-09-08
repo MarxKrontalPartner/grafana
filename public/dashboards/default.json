@@ -1,5 +1,5 @@
 {
-  "title": "Grafana",
+  "title": "iris",
   "tags": [],
   "style": "dark",
   "timezone": "browser",
@@ -24,7 +24,7 @@
       ]
     },
     {
-      "title": "Welcome to Grafana",
+      "title": "Welcome to iris",
       "height": "210px",
       "collapse": false,
       "editable": true,
