@@ -68,7 +68,7 @@ const getServiceStyles = (theme: GrafanaTheme) => {
       text-align: center;
     `,
     button: css`
-      color: #ff0000;
+      color: #d8d9da;
       margin: 0 0 ${theme.spacing.md};
       width: 100%;
       &:hover {
