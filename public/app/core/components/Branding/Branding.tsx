@@ -43,7 +43,6 @@ export class Branding {
   static GetLoginSubTitle = () => {
     const slogans = [
       "MKP GmbH",
-      'MKP GmbH',
     ];
     const count = slogans.length;
     return slogans[Math.floor(Math.random() * count)];
