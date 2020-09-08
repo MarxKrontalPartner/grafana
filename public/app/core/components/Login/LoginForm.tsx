@@ -47,9 +47,9 @@ export const LoginForm: FC<Props> = ({ children, onSubmit, isLoggingIn, password
                 aria-label={selectors.pages.Login.password}
               />
             </Field>
-            <Button aria-label={selectors.pages.Login.submit} className={submitButton} disabled={isLoggingIn}>
+            {/* <Button aria-label={selectors.pages.Login.submit} className={submitButton} disabled={isLoggingIn}>
               {isLoggingIn ? 'Logging in...' : 'Log in'}
-            </Button>
+            </Button> */}
             {children}
           </>
         )}
