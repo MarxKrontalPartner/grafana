@@ -61,6 +61,7 @@ export const getLoginStyles = (theme: GrafanaTheme) => {
     submitButton: css`
       justify-content: center;
       width: 100%;
+      background-color: #42c1eb;
     `,
     loginLogo: css`
       width: 100%;
