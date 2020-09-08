@@ -1,0 +1,16 @@
+kind: pipeline
+name: default
+type: docker
+
+clone:
+  disable: true
+
+steps:
+- name: docker  
+  image: plugins/docker
+  settings:
+    repo: iris/grafana
+    tags: dev
+  when:
+    branch:
+      - v7.1.x-iris
