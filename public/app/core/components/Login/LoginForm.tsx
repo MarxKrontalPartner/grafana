@@ -22,6 +22,9 @@ export const submitButton = css`
   justify-content: center;
   width: 100%;
   background: #3e86a3;
+  &:hover {
+    background: #12a5e2;
+  }
 `;
 
 export const LoginForm: FC<Props> = ({ children, onSubmit, isLoggingIn, passwordHint, loginHint }) => {
