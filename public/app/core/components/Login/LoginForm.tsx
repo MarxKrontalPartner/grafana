@@ -21,6 +21,7 @@ const wrapperStyles = css`
 export const submitButton = css`
   justify-content: center;
   width: 100%;
+  background: #42c0eb;
 `;
 
 export const LoginForm: FC<Props> = ({ children, onSubmit, isLoggingIn, passwordHint, loginHint }) => {
