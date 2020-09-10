@@ -31,8 +31,8 @@ export let getVersionLinks = (): FooterLink[] => {
   //   return links;
   // }
 
-  // links.push({ text: `v${buildInfo.version} (${buildInfo.commit})` });
-
+  links.push({ text: `v${buildInfo.version} (${buildInfo.commit})` });
+  
   // if (buildInfo.hasUpdate) {
   //   links.push({
   //     text: `New version available!`,
