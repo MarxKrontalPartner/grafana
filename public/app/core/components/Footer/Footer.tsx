@@ -21,7 +21,8 @@ export let getFooterLinks = (): FooterLink[] => {
 };
 
 export let getVersionLinks = (): FooterLink[] => {
-  const { irisVersion, buildInfo, licenseInfo } = config;
+  // const { irisVersion, buildInfo, licenseInfo } = config;
+  const { irisVersion } = config;
   const links: FooterLink[] = [];
   // const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
 
