@@ -46,17 +46,6 @@ export const LoginPage: FC = () => {
                       passwordHint={passwordHint}
                       isLoggingIn={isLoggingIn}
                     >
-                      {/* {!(ldapEnabled || authProxyEnabled) ? (
-                        <HorizontalGroup justify="flex-end">
-                          <LinkButton
-                            className={forgottenPasswordStyles}
-                            variant="link"
-                            href="/user/password/send-reset-email"
-                          >
-                            Forgot your password?
-                          </LinkButton>
-                        </HorizontalGroup>
-                      ) : ( */}
                       {(
                         <></>
                       )}
