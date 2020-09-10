@@ -2,8 +2,8 @@
   "author": "Grafana Labs",
   "license": "Apache-2.0",
   "private": true,
-  "name": "grafana",
-  "version": "7.1.5",
+  "name": "iris",
+  "version": "2.0.0",
   "repository": "github:grafana/grafana",
   "scripts": {
     "api-tests": "jest --notify --watch --config=devenv/e2e-api-tests/jest.js",

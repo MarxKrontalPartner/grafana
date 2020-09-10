@@ -21,12 +21,11 @@ export let getFooterLinks = (): FooterLink[] => {
 };
 
 export let getVersionLinks = (): FooterLink[] => {
-  // const { irisVersion, buildInfo, licenseInfo } = config;
-  const { irisVersion } = config;
+  const { buildInfo, licenseInfo } = config;
   const links: FooterLink[] = [];
-  // const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
+  const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
 
-  links.push({ text: `${irisVersion}`, url: 'https://marxkrontal.com' });
+   links.push({ text: `${buildInfo.edition}${stateInfo}`, url: licenseInfo.licenseUrl });
 
   // if (buildInfo.hideVersion) {
   //   return links;
