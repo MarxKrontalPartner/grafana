@@ -44,8 +44,8 @@ to{
 }`;
 
 export const getLoginStyles = (theme: GrafanaTheme) => {
-  // const bgColor = theme.isDark ? theme.palette.black : theme.palette.white;
-  const bgColor = theme.palette.black;
+  const bgColor = theme.isDark ? theme.palette.black : theme.palette.white;
+  // const bgColor = theme.palette.black;
   return {
     container: css`
       min-height: 100vh;
