@@ -31,7 +31,7 @@ export let getVersionLinks = (): FooterLink[] => {
   //   return links;
   // }
 
-  links.push({ text: `iris v${buildInfo.version}`,  url: 'https://marxkrontal.com' });
+  links.push({ text: `iris v${buildInfo.version}`, url: 'https://marxkrontal.com' });
 
   // if (buildInfo.hasUpdate) {
   //   links.push({
