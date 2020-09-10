@@ -12,10 +12,10 @@ import { Branding } from 'app/core/components/Branding/Branding';
 import { HorizontalGroup, LinkButton } from '@grafana/ui';
 import { LoginLayout, InnerBox } from './LoginLayout';
 
-const forgottenPasswordStyles = css`
-  padding: 0;
-  margin-top: 4px;
-`;
+// const forgottenPasswordStyles = css`
+//   padding: 0;
+//   margin-top: 4px;
+// `;
 
 export const LoginPage: FC = () => {
   document.title = Branding.AppTitle;
@@ -46,6 +46,7 @@ export const LoginPage: FC = () => {
                       passwordHint={passwordHint}
                       isLoggingIn={isLoggingIn}
                     >
+                      {<></>}   
                     </LoginForm>
                   </>
                 )}
