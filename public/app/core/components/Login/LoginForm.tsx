@@ -16,6 +16,7 @@ interface Props {
 const wrapperStyles = css`
   width: 100%;
   padding-bottom: 16px;
+  color: #a4a5a6;
 `;
 
 export const submitButton = css`
