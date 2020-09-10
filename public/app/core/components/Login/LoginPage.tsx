@@ -1,6 +1,6 @@
 // Libraries
 import React, { FC } from 'react';
-import { css } from 'emotion';
+// import { css } from 'emotion';
 
 // Components
 import { UserSignup } from './UserSignup';
@@ -9,7 +9,7 @@ import LoginCtrl from './LoginCtrl';
 import { LoginForm } from './LoginForm';
 import { ChangePassword } from '../ForgottenPassword/ChangePassword';
 import { Branding } from 'app/core/components/Branding/Branding';
-import { HorizontalGroup, LinkButton } from '@grafana/ui';
+// import { HorizontalGroup, LinkButton } from '@grafana/ui';
 import { LoginLayout, InnerBox } from './LoginLayout';
 
 // const forgottenPasswordStyles = css`
