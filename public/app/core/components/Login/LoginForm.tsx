@@ -23,7 +23,7 @@ export const submitButton = css`
   justify-content: center;
   width: 100%;
   background: #12a5e2;
-  color: #a4a5a6;
+  color: #555658;
   &:hover {
     background: #42c0eb;
     color: #555658;
