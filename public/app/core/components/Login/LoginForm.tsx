@@ -23,7 +23,7 @@ export const submitButton = css`
   width: 100%;
   background: #3e86a3;
   &:hover {
-    background: #12a5e2;
+    background: #640d1d;
   }
 `;
 
