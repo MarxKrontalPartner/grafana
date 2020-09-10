@@ -223,6 +223,9 @@ type Cfg struct {
 	Raw    *ini.File
 	Logger log.Logger
 
+	// iris
+	IrisVersion string
+
 	// HTTP Server Settings
 	AppUrl           string
 	AppSubUrl        string
@@ -631,6 +634,11 @@ func (cfg *Cfg) Load(args *CommandLineArgs) error {
 	cfg.Packaging = Packaging
 
 	ApplicationName = APP_NAME
+
+	Env, err = valueAsString(iniFile.Section(""), "iris_version", "v0.0.0")
+	if err != nil {
+		return err
+	}
 
 	Env, err = valueAsString(iniFile.Section(""), "app_mode", "development")
 	if err != nil {

@@ -21,26 +21,26 @@ export let getFooterLinks = (): FooterLink[] => {
 };
 
 export let getVersionLinks = (): FooterLink[] => {
-  const { buildInfo, licenseInfo } = config;
+  const { irisVersion, buildInfo, licenseInfo } = config;
   const links: FooterLink[] = [];
-  const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
+  // const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
 
-  links.push({ text: `${buildInfo.edition}${stateInfo}`, url: licenseInfo.licenseUrl });
+  links.push({ text: `${irisVersion}`, url: 'https://marxkrontal.com' });
 
   // if (buildInfo.hideVersion) {
   //   return links;
   // }
 
-  links.push({ text: `v${buildInfo.version} (${buildInfo.commit})` });
+  // links.push({ text: `v${buildInfo.version} (${buildInfo.commit})` });
 
-  if (buildInfo.hasUpdate) {
-    links.push({
-      text: `New version available!`,
-      icon: 'download-alt',
-      url: 'https://grafana.com/grafana/download?utm_source=grafana_footer',
-      target: '_blank',
-    });
-  }
+  // if (buildInfo.hasUpdate) {
+  //   links.push({
+  //     text: `New version available!`,
+  //     icon: 'download-alt',
+  //     url: 'https://grafana.com/grafana/download?utm_source=grafana_footer',
+  //     target: '_blank',
+  //   });
+  // }
 
   return links;
 };

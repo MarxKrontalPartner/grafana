@@ -12,6 +12,7 @@ import {
 } from '@grafana/data';
 
 export class GrafanaBootConfig implements GrafanaConfig {
+  irisVersion: 'None';
   datasources: { [str: string]: DataSourceInstanceSettings } = {};
   panels: { [key: string]: PanelPluginMeta } = {};
   minRefreshInterval = '';
