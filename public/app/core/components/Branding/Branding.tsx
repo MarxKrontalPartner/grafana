@@ -41,7 +41,7 @@ export class Branding {
   static AppTitle = 'iris';
   static LoginTitle = 'Welcome to iris';
   static GetLoginSubTitle = () => {
-    const slogans = ['MKP GmbH'];
+    const slogans = ['Keep in touch', 'Keep in touch with your data'];
     const count = slogans.length;
     return slogans[Math.floor(Math.random() * count)];
   };
