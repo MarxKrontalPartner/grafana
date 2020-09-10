@@ -22,10 +22,10 @@ const wrapperStyles = css`
 export const submitButton = css`
   justify-content: center;
   width: 100%;
-  background: #12a5e2;
+  background: #3e86a3;
   color: #a4a5a6;
   &:hover {
-    background: #a4a5a6;
+    background: #12a5e2;
     color: #555658;
   }
 `;
