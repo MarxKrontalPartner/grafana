@@ -36,7 +36,8 @@ export const LoginForm: FC<Props> = ({ children, onSubmit, isLoggingIn, password
       <Form onSubmit={onSubmit} validateOn="onChange">
         {({ register, errors }) => (
           <>
-            <Field label="Email or username" invalid={!!errors.user} error={errors.user?.message}>
+            {/* <Field label="Email or username" invalid={!!errors.user} error={errors.user?.message}> */}
+            <Field invalid={!!errors.user} error={errors.user?.message}>
               <Input
                 autoFocus
                 name="user"
@@ -45,7 +46,8 @@ export const LoginForm: FC<Props> = ({ children, onSubmit, isLoggingIn, password
                 aria-label={selectors.pages.Login.username}
               />
             </Field>
-            <Field label="Password" invalid={!!errors.password} error={errors.password?.message}>
+            {/* <Field label="Password" invalid={!!errors.password} error={errors.password?.message}> */}
+            <Field invalid={!!errors.password} error={errors.password?.message}>
               <Input
                 name="password"
                 type="password"
