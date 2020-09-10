@@ -46,7 +46,6 @@ export const LoginPage: FC = () => {
                       passwordHint={passwordHint}
                       isLoggingIn={isLoggingIn}
                     >
-                      {<></>}
                     </LoginForm>
                   </>
                 )}
