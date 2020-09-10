@@ -98,5 +98,4 @@ export interface GrafanaConfig {
   pluginsToPreload: string[];
   featureToggles: FeatureToggles;
   licenseInfo: LicenseInfo;
-  irisVersion: string;
 }

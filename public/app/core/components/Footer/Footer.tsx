@@ -23,15 +23,15 @@ export let getFooterLinks = (): FooterLink[] => {
 export let getVersionLinks = (): FooterLink[] => {
   const { buildInfo, licenseInfo } = config;
   const links: FooterLink[] = [];
-  const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
+  // const stateInfo = licenseInfo.stateInfo ? ` (${licenseInfo.stateInfo})` : '';
 
-  links.push({ text: `${buildInfo.edition}${stateInfo}`, url: licenseInfo.licenseUrl });
+  // links.push({ text: `${buildInfo.edition}${stateInfo}`, url: licenseInfo.licenseUrl });
 
   // if (buildInfo.hideVersion) {
   //   return links;
   // }
 
-  links.push({ text: `v${buildInfo.version} (${buildInfo.commit})` });
+  links.push({ text: `iris v${buildInfo.version}`,  url: 'https://marxkrontal.com' });
 
   // if (buildInfo.hasUpdate) {
   //   links.push({

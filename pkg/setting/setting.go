@@ -223,9 +223,6 @@ type Cfg struct {
 	Raw    *ini.File
 	Logger log.Logger
 
-	// iris
-	IrisVersion string
-
 	// HTTP Server Settings
 	AppUrl           string
 	AppSubUrl        string
