@@ -28,7 +28,7 @@ const MenuLogo: FC<BrandComponentProps> = ({ className }) => {
 const LoginBoxBackground = () => {
   const theme = useTheme();
   return css`
-    background: ${theme.isLight ? 'rgba(7, 64, 87, 1)' : 'rgba(7, 64, 87, 1)'};
+    background: ${theme.isLight ? 'rgba(0, 73, 114, 1)' : 'rgba(0, 73, 114, 1)'};
     background-size: cover;
   `;
 };
