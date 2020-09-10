@@ -80,6 +80,7 @@ export const getLoginStyles = (theme: GrafanaTheme) => {
     `,
     mainTitle: css`
       font-size: 32px;
+      color: #640d1d;
     `,
     subTitle: css`
       font-size: ${theme.typography.size.md};
