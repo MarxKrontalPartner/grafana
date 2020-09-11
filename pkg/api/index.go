@@ -360,7 +360,7 @@ func (hs *HTTPServer) setIndexViewData(c *models.ReqContext) (*dtos.IndexViewDat
 		})
 	}
 
-	helpVersion := fmt.Sprintf(`%s v%s (%s)`, setting.ApplicationName, setting.BuildVersion, setting.BuildCommit)
+	helpVersion := fmt.Sprintf(`%s v%s`, setting.ApplicationName, setting.BuildVersion)
 	if hs.Cfg.AnonymousHideVersion && !c.IsSignedIn {
 		helpVersion = setting.ApplicationName
 	}
