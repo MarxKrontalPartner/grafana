@@ -82,6 +82,7 @@ const getTabStyles = stylesFactory((theme: GrafanaTheme) => {
     padding: css`
       padding: 11px 15px 9px;
     `,
+    // Bartsch: changed to MKP color
     activeStyle: css`
       label: activeTabStyle;
       border-color: ${theme.palette.orange} ${colors.pageHeaderBorder} transparent;
@@ -97,7 +98,7 @@ const getTabStyles = stylesFactory((theme: GrafanaTheme) => {
         right: 0;
         height: 2px;
         top: 0;
-        background-image: linear-gradient(to right, #f05a28 30%, #fbca0a 99%);
+        background-image: linear-gradient(to right, #004972 30%, #42c0eb 99%);
       }
     `,
   };

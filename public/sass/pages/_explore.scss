@@ -6,8 +6,9 @@
   }
 }
 
+// Bartsch: changed to MKP color
 .icon-brand-gradient {
-  color: linear-gradient(180deg, #f05a28 30%, #fbca0a 100%);
+  color: linear-gradient(180deg, #004972 30%, #42c0eb 100%);
 }
 
 .icon-margin-left {
@@ -31,7 +32,8 @@
 
   i {
     text-shadow: none;
-    background: linear-gradient(180deg, #f05a28 30%, #fbca0a 100%);
+    // Bartsch: changed to MKP color
+    background: linear-gradient(180deg, #004972 30%, #42c0eb 100%);
     background-clip: text;
     -webkit-text-fill-color: transparent;
     -moz-text-fill-color: transparent;

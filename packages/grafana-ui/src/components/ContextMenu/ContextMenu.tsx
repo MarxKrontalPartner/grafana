@@ -130,7 +130,7 @@ const getContextMenuStyles = stylesFactory((theme: GrafanaTheme) => {
       cursor: pointer;
       &:hover {
         background: ${itemBgHover};
-        border-image: linear-gradient(#f05a28 30%, #fbca0a 99%);
+        border-image: linear-gradient(#004972 30%, #42c0eb 99%);
         border-image-slice: 1;
       }
     `,

@@ -100,8 +100,9 @@ $text-shadow-faint: 1px 1px 4px rgb(45, 45, 45);
 $textShadow: none;
 
 // gradients
-$brand-gradient-horizontal: linear-gradient(to right, #f05a28 30%, #fbca0a 99%);
-$brand-gradient-vertical: linear-gradient(#f05a28 30%, #fbca0a 99%);
+// Bartsch: changed to MKP color in _variables.dark.scss.tmpl.ts - file
+$brand-gradient-horizontal: linear-gradient(to right, #004972 30%, #42c0eb 99%);
+$brand-gradient-vertical: linear-gradient(#004972 30%, #42c0eb 99%);
 
 // Links
 // -------------------------

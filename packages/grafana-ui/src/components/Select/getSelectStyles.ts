@@ -46,9 +46,10 @@ export const getSelectStyles = stylesFactory((theme: GrafanaTheme) => {
       flex-direction: column;
       flex-grow: 1;
     `,
+    // Bartsch: changed to MKP color
     optionFocused: css`
       background: ${optionBgHover};
-      border-image: linear-gradient(#f05a28 30%, #fbca0a 99%);
+      border-image: linear-gradient(#004972 30%, #42c0eb 99%);
       border-image-slice: 1;
       border-style: solid;
       border-top: 0;
