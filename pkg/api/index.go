@@ -87,7 +87,7 @@ func (hs *HTTPServer) setIndexViewData(c *models.ReqContext) (*dtos.IndexViewDat
 		AppNameBodyClass:        getAppNameBodyClass(hs.License.HasValidLicense()),
 		FavIcon:                 "public/img/fav32.png",
 		AppleTouchIcon:          "public/img/apple-touch-icon.png",
-		AppTitle:                "Grafana",
+		AppTitle:                "iris",
 	}
 
 	if setting.DisableGravatar {
@@ -360,6 +360,7 @@ func (hs *HTTPServer) setIndexViewData(c *models.ReqContext) (*dtos.IndexViewDat
 		})
 	}
 
+	// Bartsch: Disabled build version
 	helpVersion := fmt.Sprintf(`%s v%s`, setting.ApplicationName, setting.BuildVersion)
 	if hs.Cfg.AnonymousHideVersion && !c.IsSignedIn {
 		helpVersion = setting.ApplicationName
