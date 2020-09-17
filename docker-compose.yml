@@ -1,0 +1,17 @@
+version: '3'
+services:
+  iris-grafana-dev:
+    image: 172.19.1.54:8800/grafana:dev
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-dev-data:/var/lib/grafana
+      - grafana-dev-conf:/etc/grafana
+    environment:
+      -   GF_INSTALL_PLUGINS=mxswat-separator-panel,natel-plotly-panel,grafana-worldmap-panel,grafana-piechart-panel,novalabs-annotations-panel,jdbranham-diagram-panel,novalabs-annotations-panel,snuids-trafficlights-panel,snuids-radar-panel,bessler-pictureit-panel,ryantxu-ajax-panel,jasonlashua-prtg-datasource,macropower-analytics-panel,agenty-flowcharting-panel,smartmakers-trafficlight-panel,blackmirror1-singlestat-math-panel
+    # environment:
+    #   - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+    #   - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+volumes:
+  grafana-dev-data:
+  grafana-dev-conf:

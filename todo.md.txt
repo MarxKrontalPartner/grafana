@@ -1,0 +1,1 @@
+Umstellung Farbpalette: buildNamedColorsPalette
