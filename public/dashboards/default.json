@@ -1,5 +1,5 @@
 {
-  "title": "iris",
+  "title": "expertControl",
   "tags": [],
   "style": "dark",
   "timezone": "browser",
@@ -24,7 +24,7 @@
       ]
     },
     {
-      "title": "Welcome to iris",
+      "title": "Welcome to expertControl",
       "height": "210px",
       "collapse": false,
       "editable": true,

@@ -9,8 +9,8 @@ steps:
 - name: docker  
   image: plugins/docker
   settings:
-    repo: iris/grafana
+    repo: expertControl/grafana
     tags: dev
   when:
     branch:
-      - v7.1.x-iris
+      - v7.1.x-expertControl

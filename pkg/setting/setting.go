@@ -38,7 +38,7 @@ const (
 	DEV      = "development"
 	PROD     = "production"
 	TEST     = "test"
-	APP_NAME = "iris"
+	APP_NAME = "expertControl"
 )
 
 var (
@@ -632,7 +632,7 @@ func (cfg *Cfg) Load(args *CommandLineArgs) error {
 
 	ApplicationName = APP_NAME
 
-	Env, err = valueAsString(iniFile.Section(""), "iris_version", "v0.0.0")
+	Env, err = valueAsString(iniFile.Section(""), "expertControl_version", "v0.0.0")
 	if err != nil {
 		return err
 	}

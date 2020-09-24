@@ -2,7 +2,7 @@
   "author": "Grafana Labs",
   "license": "Apache-2.0",
   "private": true,
-  "name": "iris",
+  "name": "expertControl",
   "version": "2.0.0",
   "repository": "github:grafana/grafana",
   "scripts": {

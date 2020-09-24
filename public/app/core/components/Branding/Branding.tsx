@@ -8,7 +8,7 @@ export interface BrandComponentProps {
 }
 
 const LoginLogo: FC<BrandComponentProps> = ({ className }) => {
-  return <img className={className} src="public/img/grafana_icon.svg" alt="iris" />;
+  return <img className={className} src="public/img/grafana_icon.svg" alt="expertControl" />;
 };
 
 const LoginBackground: FC<BrandComponentProps> = ({ className, children }) => {
@@ -22,7 +22,7 @@ const LoginBackground: FC<BrandComponentProps> = ({ className, children }) => {
 };
 
 const MenuLogo: FC<BrandComponentProps> = ({ className }) => {
-  return <img className={className} src="public/img/grafana_icon.svg" alt="iris" />;
+  return <img className={className} src="public/img/grafana_icon.svg" alt="expertControl" />;
 };
 
 const LoginBoxBackground = () => {
@@ -38,8 +38,8 @@ export class Branding {
   static LoginBackground = LoginBackground;
   static MenuLogo = MenuLogo;
   static LoginBoxBackground = LoginBoxBackground;
-  static AppTitle = 'iris';
-  static LoginTitle = 'Welcome to iris';
+  static AppTitle = 'expertControl';
+  static LoginTitle = 'Welcome to expertControl';
   static GetLoginSubTitle = () => {
     const slogans = ['Keep in touch', 'Keep in touch with your data'];
     const count = slogans.length;

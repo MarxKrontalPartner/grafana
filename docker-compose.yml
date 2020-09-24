@@ -1,6 +1,6 @@
 version: '3'
 services:
-  iris-grafana-dev:
+  expertControl-grafana-dev:
     image: 172.19.1.54:8800/grafana:dev
     ports:
       - '3000:3000'

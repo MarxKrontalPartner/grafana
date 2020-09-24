@@ -64,7 +64,7 @@ export class GrafanaBootConfig implements GrafanaConfig {
 
     const defaults = {
       datasources: {},
-      windowTitlePrefix: 'iris - ',
+      windowTitlePrefix: 'expertControl - ',
       panels: {},
       newPanelTitle: 'Panel Title',
       playlist_timespan: '1m',
