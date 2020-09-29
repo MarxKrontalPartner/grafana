@@ -41,7 +41,7 @@ export class Branding {
   static AppTitle = 'expertControl';
   static LoginTitle = 'expertControl';
   static GetLoginSubTitle = () => {
-    const slogans = ['Keep in touch', 'Keep in touch with your data'];
+    const slogans = ['smartBRIDGE Hamburg'];
     const count = slogans.length;
     return slogans[Math.floor(Math.random() * count)];
   };
