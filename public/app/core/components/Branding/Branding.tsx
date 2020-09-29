@@ -39,7 +39,7 @@ export class Branding {
   static MenuLogo = MenuLogo;
   static LoginBoxBackground = LoginBoxBackground;
   static AppTitle = 'expertControl';
-  static LoginTitle = 'Welcome to expertControl';
+  static LoginTitle = 'expertControl';
   static GetLoginSubTitle = () => {
     const slogans = ['Keep in touch', 'Keep in touch with your data'];
     const count = slogans.length;
