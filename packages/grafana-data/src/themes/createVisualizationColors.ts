@@ -300,7 +300,7 @@ function getClassicPalette() {
 //           { name: 'red2', color: '#FFA8C2', aliases: ['light-red'] },
 //           { name: 'red3', color: '#FF85A9', aliases: ['red'], primary: true },
 //           { name: 'red4', color: '#FF5286', aliases: ['semi-dark-red'] },
-//           { name: 'red5', color: '#E0226E', aliases: ['dark-red'] },
+//           { name: 'red5', color: '#c51f3d', aliases: ['dark-red'] },
 //         ],
 //       },
 //       {
@@ -350,7 +350,7 @@ function getClassicPalette() {
 //           { name: 'blue2', color: '#A3C2FF', aliases: ['light-blue'] },
 //           { name: 'blue3', color: '#83ACFC', aliases: ['blue'], primary: true },
 //           { name: 'blue4', color: '#5D8FEF', aliases: ['semi-dark-blue'] },
-//           { name: 'blue5', color: '#3871DC', aliases: ['dark-blue'] },
+//           { name: 'blue5', color: '#12a5e2', aliases: ['dark-blue'] },
 //         ],
 //       },
 //       {

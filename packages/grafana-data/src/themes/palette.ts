@@ -6,6 +6,7 @@ export const palette = {
   gray15: '#22252b', //'#202226',
   gray10: '#181b1f', // old '#141619',
   gray05: '#111217', // old '#0b0c0e',
+  gray1000: '#52545c',
 
   // new from figma,
   darkLayer0: '#18181A',
@@ -33,12 +34,12 @@ export const palette = {
   orangeDarkMain: '#F5B73D',
   orangeDarkText: '#F8D06B',
 
-  blueLightMain: '#3871DC',
+  blueLightMain: '#12a5e2',
   blueLightText: '#0465d7', // '#1F62E0',
-  redLightMain: '#E0226E',
+  redLightMain: '#c51f3d',
   redLightText: '#CF0E5B',
   greenLightMain: '#1A7F4B',
   greenLightText: '#1A7F4B',
-  orangeLightMain: '#E56F00',
+  orangeLightMain: '#c51f3d',
   orangeLightText: '#BD4B00',
 };
