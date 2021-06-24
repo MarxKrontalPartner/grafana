@@ -156,7 +156,7 @@ export interface GrafanaTheme extends GrafanaThemeCommons {
     blue85: string;
     blue80: string;
     blue77: string;
-
+    blue: string;
     // New reds palette used by next-gen form elements
     red88: string;
 

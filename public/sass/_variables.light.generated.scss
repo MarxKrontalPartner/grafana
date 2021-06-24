@@ -16,12 +16,12 @@ $theme-name: light;
 // New Colors
 // -------------------------
 $blue-light: #0465d7;
-$blue-base: #3871DC;
-$blue-shade: rgb(44, 90, 176);
-$red-base: #E0226E;
-$red-shade: rgb(179, 27, 88);
-$green-base: #1A7F4B;
-$green-shade: rgb(20, 101, 60);
+$blue-base: #12a5e2;
+$blue-shade: rgb(14, 132, 180);
+$red-base: #c51f3d;
+$red-shade: rgb(157, 24, 48);
+$green-base: #a39c0e;
+$green-shade: rgb(130, 124, 11);
 $orange-dark: #ff780a;
 
 $gray98: #f7f8fa;
@@ -71,18 +71,18 @@ $purple: #9933cc;
 $variable: #0465d7;
 
 $brand-primary: #eb7b18;
-$brand-success: #1A7F4B;
-$brand-warning: #E56F00;
-$brand-danger: #E0226E;
+$brand-success: #a39c0e;
+$brand-warning: #c51f3d;
+$brand-danger: #c51f3d;
 
 $query-red: #CF0E5B;
-$query-green: #1A7F4B;
+$query-green: #a39c0e;
 $query-purple: #fe85fc;
 $query-orange: #eb7b18;
 
 // Status colors
 // -------------------------
-$online: #1A7F4B;
+$online: #a39c0e;
 $warn: #BD4B00;
 $critical: #CF0E5B;
 
@@ -271,18 +271,18 @@ $tab-border-color: $gray-5;
 // -------------------------
 $warning-text-color: #BD4B00;
 $error-text-color: #CF0E5B;
-$success-text-color: #1A7F4B;
+$success-text-color: #a39c0e;
 
-$alert-error-bg: #E0226E;
-$alert-success-bg: #1A7F4B;
-$alert-warning-bg: #E56F00;
-$alert-info-bg: #E56F00;
+$alert-error-bg: #c51f3d;
+$alert-success-bg: #a39c0e;
+$alert-warning-bg: #c51f3d;
+$alert-info-bg: #c51f3d;
 
 // Tooltips and popovers
 $tooltipBackground: #555;
 $tooltipColor: #FFF;
 $tooltipArrowColor: #555;
-$tooltipBackgroundError: #E0226E;
+$tooltipBackgroundError: #c51f3d;
 $tooltipShadow: 0px 4px 8px rgba(24, 26, 27, 0.2);
 
 $popover-bg: #fff;

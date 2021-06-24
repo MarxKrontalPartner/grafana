@@ -199,7 +199,7 @@ const getLabelStyles = stylesFactory((theme: GrafanaTheme) => {
       white-space: nowrap;
     `,
     utc: css`
-      color: ${theme.palette.orange};
+      color: ${theme.palette.blue};
       font-size: ${theme.typography.size.sm};
       padding-left: 6px;
       line-height: 28px;
