@@ -38,8 +38,8 @@ export const palette = {
   blueLightText: '#0465d7', // '#1F62E0',
   redLightMain: '#c51f3d',
   redLightText: '#CF0E5B',
-  greenLightMain: '#1A7F4B',
-  greenLightText: '#1A7F4B',
+  greenLightMain: '#a39c0e', // '#1A7F4B',
+  greenLightText: '#a39c0e', // '#1A7F4B',
   orangeLightMain: '#c51f3d',
   orangeLightText: '#BD4B00',
 };
