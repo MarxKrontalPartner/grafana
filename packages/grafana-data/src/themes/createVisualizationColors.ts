@@ -231,6 +231,16 @@ function getClassicPalette() {
   // Todo replace these with named colors (as many as possible)
 
   return [
+    '#004972', // MKP logo dark blue
+    '#a39c0e', // MKP green
+    '#c51f3d', // MKP light red
+    '#555658', // MKP dark grey
+    '#12a5e2', // MKP light blue
+    '#640d1d', // MKP dark red
+    '#42c0eb', // MKP logo light blue
+    '#074057', // MKP dark blue
+    '#a4a5a6', // MKP light grey
+    '#3e86a3', // MKP cyan
     'green', // '#7EB26D', // 0: pale green
     'semi-dark-yellow', // '#EAB839', // 1: mustard
     'light-blue', // #6ED0E0', // 2: light blue
