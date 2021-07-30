@@ -311,6 +311,10 @@ $info-box-border-color: $blue-base;
 $footer-link-color: $gray-3;
 $footer-link-hover: $dark-2;
 
+// login page footer
+$footer-login-page-link-color: white;
+$footer-login-page-link-hover: #c6c6c6;
+
 // json explorer
 $json-explorer-default-color: black;
 $json-explorer-string-color: green;

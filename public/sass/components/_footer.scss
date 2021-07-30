@@ -49,13 +49,13 @@
     bottom: $spacer;
     position: absolute;
     padding: $space-md 0 $space-md 0;
-    color: $text-color;
+    color: $footer-login-page-link-color;
 
     a {
-      color: $text-color;
+      color: $footer-login-page-link-color;
 
       &:hover {
-        color: $text-color-strong;
+        color: $footer-login-page-link-hover;
       }
     }
   }

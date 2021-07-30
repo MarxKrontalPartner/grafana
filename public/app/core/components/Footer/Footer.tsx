@@ -31,7 +31,7 @@ export let getVersionLinks = (): FooterLink[] => {
   //   return links;
   // }
 
-  links.push({ text: `iris v${buildInfo.version} (${buildInfo.commit})` });
+  links.push({ text: `iris v${buildInfo.version}` });
 
   // if (buildInfo.hasUpdate) {
   //   links.push({

@@ -8,6 +8,7 @@ import { OrgSwitcher } from '../OrgSwitcher';
 import { getFooterLinks } from '../Footer/Footer';
 import { ShowModalReactEvent } from '../../../types/events';
 import { HelpModal } from '../help/HelpModal';
+import config from 'app/core/config';
 
 export interface Props {
   link: NavModelItem;
@@ -34,6 +35,7 @@ export default class BottomNavLinks extends PureComponent<Props, State> {
   };
 
   render() {
+    const { buildInfo } = config;
     const { link, user } = this.props;
     const { showSwitcherModal } = this.state;
     const subMenuIconClassName = css`
@@ -57,7 +59,7 @@ export default class BottomNavLinks extends PureComponent<Props, State> {
         <ul className="dropdown-menu dropdown-menu--sidemenu" role="menu">
           {link.subTitle && (
             <li className="sidemenu-subtitle">
-              <span className="sidemenu-item-text">{link.subTitle}</span>
+              <span className="sidemenu-item-text">iris v{buildInfo.version}</span>
             </li>
           )}
           {link.showOrgSwitcher && (
