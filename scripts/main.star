@@ -46,10 +46,9 @@ def get_steps(edition, is_downstream=False):
         enterprise_downstream_step(edition=edition),
         codespell_step(),
         shellcheck_step(),
-        test_backend_step(edition=edition),
         lint_backend_step(edition=edition),
+        test_backend_step(edition=edition),
         test_frontend_step(),
-        frontend_metrics_step(edition=edition),
         build_backend_step(edition=edition, ver_mode=ver_mode, is_downstream=is_downstream),
         build_frontend_step(edition=edition, ver_mode=ver_mode, is_downstream=is_downstream),
         build_plugins_step(edition=edition, sign=True),
@@ -60,8 +59,8 @@ def get_steps(edition, is_downstream=False):
     if include_enterprise2:
         edition2 = 'enterprise2'
         steps.extend([
-            test_backend_step(edition=edition2),
             lint_backend_step(edition=edition2),
+            test_backend_step(edition=edition2),
             build_backend_step(edition=edition2, ver_mode=ver_mode, variants=['linux-x64'], is_downstream=is_downstream),
         ])
 
@@ -73,6 +72,7 @@ def get_steps(edition, is_downstream=False):
         e2e_tests_step(edition=edition),
         build_storybook_step(edition=edition, ver_mode=ver_mode),
         publish_storybook_step(edition=edition, ver_mode=ver_mode),
+        frontend_metrics_step(edition=edition),
         build_frontend_docs_step(edition=edition),
         copy_packages_for_docker_step(),
         build_docker_images_step(edition=edition, ver_mode=ver_mode, publish=publish),

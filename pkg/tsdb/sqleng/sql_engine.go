@@ -20,6 +20,7 @@ import (
 	"github.com/grafana/grafana/pkg/models"
 	"github.com/grafana/grafana/pkg/plugins"
 	"github.com/grafana/grafana/pkg/tsdb/interval"
+	"github.com/grafana/grafana/pkg/util/errutil"
 	"xorm.io/core"
 	"xorm.io/xorm"
 )
@@ -173,7 +174,7 @@ func (e *dataPlugin) DataQuery(ctx context.Context, dsInfo *models.DataSource,
 	return result, nil
 }
 
-//nolint: staticcheck // plugins.DataQueryResult deprecated
+//nolint: staticcheck,gocyclo // plugins.DataQueryResult deprecated
 func (e *dataPlugin) executeQuery(query plugins.DataSubQuery, wg *sync.WaitGroup, queryContext plugins.DataQuery,
 	ch chan plugins.DataQueryResult) {
 	defer wg.Done()
@@ -270,11 +271,9 @@ func (e *dataPlugin) executeQuery(query plugins.DataSubQuery, wg *sync.WaitGroup
 		return
 	}
 
-	if qm.timeIndex != -1 {
-		if err := convertSQLTimeColumnToEpochMS(frame, qm.timeIndex); err != nil {
-			errAppendDebug("db convert time column failed", err, interpolatedQuery)
-			return
-		}
+	if err := convertSQLTimeColumnsToEpochMS(frame, qm); err != nil {
+		errAppendDebug("converting time columns failed", err, interpolatedQuery)
+		return
 	}
 
 	if qm.Format == dataQueryFormatSeries {
@@ -283,8 +282,16 @@ func (e *dataPlugin) executeQuery(query plugins.DataSubQuery, wg *sync.WaitGroup
 			errAppendDebug("db has no time column", errors.New("no time column found"), interpolatedQuery)
 			return
 		}
+
+		// Make sure to name the time field 'Time' to be backward compatible with Grafana pre-v8.
+		frame.Fields[qm.timeIndex].Name = data.TimeSeriesTimeFieldName
+
 		for i := range qm.columnNames {
 			if i == qm.timeIndex || i == qm.metricIndex {
+				continue
+			}
+
+			if t := frame.Fields[i].Type(); t == data.FieldTypeString || t == data.FieldTypeNullableString {
 				continue
 			}
 
@@ -327,10 +334,6 @@ func (e *dataPlugin) executeQuery(query plugins.DataSubQuery, wg *sync.WaitGroup
 				e.log.Error("Failed to resample dataframe", "err", err)
 				frame.AppendNotices(data.Notice{Text: "Failed to resample dataframe", Severity: data.NoticeSeverityWarning})
 			}
-			if err := trim(frame, *qm); err != nil {
-				e.log.Error("Failed to trim dataframe", "err", err)
-				frame.AppendNotices(data.Notice{Text: "Failed to trim dataframe", Severity: data.NoticeSeverityWarning})
-			}
 		}
 	}
 
@@ -371,6 +374,7 @@ func (e *dataPlugin) newProcessCfg(query plugins.DataSubQuery, queryContext plug
 		columnNames:  columnNames,
 		rows:         rows,
 		timeIndex:    -1,
+		timeEndIndex: -1,
 		metricIndex:  -1,
 		metricPrefix: false,
 		queryContext: queryContext,
@@ -414,6 +418,12 @@ func (e *dataPlugin) newProcessCfg(query plugins.DataSubQuery, queryContext plug
 				break
 			}
 		}
+
+		if qm.Format == dataQueryFormatTable && col == "timeend" {
+			qm.timeEndIndex = i
+			continue
+		}
+
 		switch col {
 		case "metric":
 			qm.metricIndex = i
@@ -452,6 +462,7 @@ type dataQueryModel struct {
 	columnNames       []string
 	columnTypes       []*sql.ColumnType
 	timeIndex         int
+	timeEndIndex      int
 	metricIndex       int
 	rows              *core.Rows
 	metricPrefix      bool
@@ -781,6 +792,22 @@ func convertNullableFloat32ToEpochMS(origin *data.Field, newField *data.Field) {
 	}
 }
 
+func convertSQLTimeColumnsToEpochMS(frame *data.Frame, qm *dataQueryModel) error {
+	if qm.timeIndex != -1 {
+		if err := convertSQLTimeColumnToEpochMS(frame, qm.timeIndex); err != nil {
+			return errutil.Wrap("failed to convert time column", err)
+		}
+	}
+
+	if qm.timeEndIndex != -1 {
+		if err := convertSQLTimeColumnToEpochMS(frame, qm.timeEndIndex); err != nil {
+			return errutil.Wrap("failed to convert timeend column", err)
+		}
+	}
+
+	return nil
+}
+
 // convertSQLTimeColumnToEpochMS converts column named time to unix timestamp in milliseconds
 // to make native datetime types and epoch dates work in annotation and table queries.
 func convertSQLTimeColumnToEpochMS(frame *data.Frame, timeIndex int) error {
@@ -888,7 +915,7 @@ func convertSQLValueColumnToFloat(frame *data.Frame, Index int) (*data.Frame, er
 	default:
 		convertUnknownToZero(frame.Fields[Index], newField)
 		frame.Fields[Index] = newField
-		return frame, fmt.Errorf("metricIndex %d type can't be converted to float", Index)
+		return frame, fmt.Errorf("metricIndex %d type %s can't be converted to float", Index, valueType)
 	}
 	frame.Fields[Index] = newField
 

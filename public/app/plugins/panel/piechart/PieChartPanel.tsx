@@ -49,6 +49,14 @@ export function PieChartPanel(props: Props) {
     timeZone,
   });
 
+  if (!hasFrames(fieldDisplayValues)) {
+    return (
+      <div className="panel-empty">
+        <p>No data</p>
+      </div>
+    );
+  }
+
   return (
     <VizLayout width={width} height={height} legend={getLegend(props, fieldDisplayValues)}>
       {(vizWidth: number, vizHeight: number) => {
@@ -80,39 +88,42 @@ function getLegend(props: Props, displayValues: FieldDisplay[]) {
     })
     .reduce((acc, item) => item.display.numeric + acc, 0);
 
-  const legendItems = displayValues.map<VizLegendItem>((value, idx) => {
-    const hidden = value.field.custom.hideFrom.viz;
-    const display = value.display;
-    return {
-      label: display.title ?? '',
-      color: display.color ?? FALLBACK_COLOR,
-      yAxis: 1,
-      disabled: hidden,
-      getItemKey: () => (display.title ?? '') + idx,
-      getDisplayValues: () => {
-        const valuesToShow = legendOptions.values ?? [];
-        let displayValues = [];
+  const legendItems = displayValues
+    // Since the pie chart is always sorted, let's sort the legend as well.
+    .sort((a, b) => b.display.numeric - a.display.numeric)
+    .map<VizLegendItem>((value, idx) => {
+      const hidden = value.field.custom.hideFrom.viz;
+      const display = value.display;
+      return {
+        label: display.title ?? '',
+        color: display.color ?? FALLBACK_COLOR,
+        yAxis: 1,
+        disabled: hidden,
+        getItemKey: () => (display.title ?? '') + idx,
+        getDisplayValues: () => {
+          const valuesToShow = legendOptions.values ?? [];
+          let displayValues = [];
 
-        if (valuesToShow.includes(PieChartLegendValues.Value)) {
-          displayValues.push({ numeric: display.numeric, text: formattedValueToString(display), title: 'Value' });
-        }
+          if (valuesToShow.includes(PieChartLegendValues.Value)) {
+            displayValues.push({ numeric: display.numeric, text: formattedValueToString(display), title: 'Value' });
+          }
 
-        if (valuesToShow.includes(PieChartLegendValues.Percent)) {
-          const fractionOfTotal = hidden ? 0 : display.numeric / total;
-          const percentOfTotal = fractionOfTotal * 100;
+          if (valuesToShow.includes(PieChartLegendValues.Percent)) {
+            const fractionOfTotal = hidden ? 0 : display.numeric / total;
+            const percentOfTotal = fractionOfTotal * 100;
 
-          displayValues.push({
-            numeric: fractionOfTotal,
-            percent: percentOfTotal,
-            text: hidden ? '-' : percentOfTotal.toFixed(0) + '%',
-            title: valuesToShow.length > 1 ? 'Percent' : undefined,
-          });
-        }
+            displayValues.push({
+              numeric: fractionOfTotal,
+              percent: percentOfTotal,
+              text: hidden ? '-' : percentOfTotal.toFixed(0) + '%',
+              title: valuesToShow.length > 1 ? 'Percent' : undefined,
+            });
+          }
 
-        return displayValues;
-      },
-    };
-  });
+          return displayValues;
+        },
+      };
+    });
 
   return (
     <VizLegend
@@ -122,6 +133,10 @@ function getLegend(props: Props, displayValues: FieldDisplay[]) {
       displayMode={legendOptions.displayMode}
     />
   );
+}
+
+function hasFrames(fieldDisplayValues: FieldDisplay[]) {
+  return fieldDisplayValues.some((fd) => fd.view?.dataFrame.length);
 }
 
 function useSliceHighlightState() {

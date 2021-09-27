@@ -1,26 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { selectOptionInTest } from '@grafana/ui';
 
-import { byRole, byText } from 'testing-library-selector';
-import { Props, GeneralSettingsUnconnected as GeneralSettings } from './GeneralSettings';
+import { byRole } from 'testing-library-selector';
+import { GeneralSettingsUnconnected as GeneralSettings, Props } from './GeneralSettings';
 import { DashboardModel } from '../../state';
-
-jest.mock('@grafana/runtime', () => ({
-  ...((jest.requireActual('@grafana/runtime') as unknown) as object),
-  getBackendSrv: () => ({
-    search: jest.fn(() => [
-      { title: 'A', id: 'A' },
-      { title: 'B', id: 'B' },
-    ]),
-  }),
-}));
-
-jest.mock('app/core/services/context_srv', () => ({
-  contextSrv: {
-    user: { orgId: 1 },
-  },
-}));
 
 const setupTestContext = (options: Partial<Props>) => {
   const defaults: Props = {
@@ -32,6 +17,7 @@ const setupTestContext = (options: Partial<Props>) => {
         time_options: ['5m', '15m', '1h', '6h', '12h', '24h', '2d', '7d', '30d'],
       },
       meta: {
+        folderId: 1,
         folderTitle: 'test',
       },
       timezone: 'utc',
@@ -43,11 +29,6 @@ const setupTestContext = (options: Partial<Props>) => {
   const { rerender } = render(<GeneralSettings {...props} />);
 
   return { rerender, props };
-};
-
-const clickSelectOption = async (selectElement: HTMLElement, optionText: string): Promise<void> => {
-  userEvent.click(byRole('textbox').get(selectElement));
-  userEvent.click(byText(optionText).get(selectElement));
 };
 
 describe('General Settings', () => {
@@ -66,7 +47,9 @@ describe('General Settings', () => {
     it('should call update function', async () => {
       const { props } = setupTestContext({});
       userEvent.click(screen.getByLabelText('Time zone picker select container'));
-      await clickSelectOption(screen.getByLabelText('Time zone picker select container'), 'Browser Time');
+      const timeZonePicker = screen.getByLabelText('Time zone picker select container');
+      userEvent.click(byRole('textbox').get(timeZonePicker));
+      await selectOptionInTest(timeZonePicker, 'Browser Time');
       expect(props.updateTimeZone).toHaveBeenCalledWith('browser');
       expect(props.dashboard.timezone).toBe('browser');
     });

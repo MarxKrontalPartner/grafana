@@ -14,8 +14,9 @@ import (
 
 func TestSocialAzureAD_UserInfo(t *testing.T) {
 	type fields struct {
-		SocialBase    *SocialBase
-		allowedGroups []string
+		SocialBase        *SocialBase
+		allowedGroups     []string
+		autoAssignOrgRole string
 	}
 	type args struct {
 		client *http.Client
@@ -39,7 +40,9 @@ func TestSocialAzureAD_UserInfo(t *testing.T) {
 				Name:              "My Name",
 				ID:                "1234",
 			},
-			settingAutoAssignOrgRole: "Viewer",
+			fields: fields{
+				autoAssignOrgRole: "Viewer",
+			},
 			want: &BasicUserInfo{
 				Id:      "1234",
 				Name:    "My Name",
@@ -77,7 +80,9 @@ func TestSocialAzureAD_UserInfo(t *testing.T) {
 				Name:              "My Name",
 				ID:                "1234",
 			},
-			settingAutoAssignOrgRole: "Viewer",
+			fields: fields{
+				autoAssignOrgRole: "Viewer",
+			},
 			want: &BasicUserInfo{
 				Id:      "1234",
 				Name:    "My Name",
@@ -154,7 +159,9 @@ func TestSocialAzureAD_UserInfo(t *testing.T) {
 				Name:              "My Name",
 				ID:                "1234",
 			},
-			settingAutoAssignOrgRole: "Editor",
+			fields: fields{
+				autoAssignOrgRole: "Editor",
+			},
 			want: &BasicUserInfo{
 				Id:      "1234",
 				Name:    "My Name",
@@ -222,7 +229,8 @@ func TestSocialAzureAD_UserInfo(t *testing.T) {
 		{
 			name: "Error if user is a member of allowed_groups",
 			fields: fields{
-				allowedGroups: []string{"foo", "bar"},
+				allowedGroups:     []string{"foo", "bar"},
+				autoAssignOrgRole: "Viewer",
 			},
 			claims: &azureClaims{
 				Email:             "me@example.com",
@@ -247,8 +255,9 @@ func TestSocialAzureAD_UserInfo(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &SocialAzureAD{
-				SocialBase:    tt.fields.SocialBase,
-				allowedGroups: tt.fields.allowedGroups,
+				SocialBase:        tt.fields.SocialBase,
+				allowedGroups:     tt.fields.allowedGroups,
+				autoAssignOrgRole: tt.fields.autoAssignOrgRole,
 			}
 
 			key := []byte("secret")

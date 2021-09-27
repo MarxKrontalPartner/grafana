@@ -40,7 +40,7 @@ func TestPluginManager_Init(t *testing.T) {
 
 		assert.Empty(t, pm.scanningErrors)
 		verifyCorePluginCatalogue(t, pm)
-		verifyBundledPluginCatalogue(t, pm)
+		verifyBundledPlugins(t, pm)
 	})
 
 	t.Run("Base case with single external plugin", func(t *testing.T) {
@@ -231,6 +231,7 @@ func TestPluginManager_Init(t *testing.T) {
 				Signature:     plugins.PluginSignatureValid,
 				SignatureType: plugins.GrafanaType,
 				SignatureOrg:  "Grafana Labs",
+				SignedFiles:   plugins.PluginFiles{"plugin.json": {}},
 				Dependencies: plugins.PluginDependencies{
 					GrafanaVersion: "*",
 					Plugins:        []plugins.PluginDependencyItem{},
@@ -496,6 +497,7 @@ func TestPluginManager_Installer(t *testing.T) {
 			Signature:     plugins.PluginSignatureValid,
 			SignatureType: plugins.GrafanaType,
 			SignatureOrg:  "Grafana Labs",
+			SignedFiles:   plugins.PluginFiles{"plugin.json": {}},
 			Dependencies: plugins.PluginDependencies{
 				GrafanaVersion: "*",
 				Plugins:        []plugins.PluginDependencyItem{},
@@ -607,12 +609,11 @@ func verifyCorePluginCatalogue(t *testing.T, pm *PluginManager) {
 	}
 }
 
-func verifyBundledPluginCatalogue(t *testing.T, pm *PluginManager) {
+func verifyBundledPlugins(t *testing.T, pm *PluginManager) {
 	t.Helper()
 
 	bundledPlugins := map[string]string{
-		"input":                    "input-datasource",
-		"grafana-plugin-admin-app": "plugin-admin-app",
+		"input": "input-datasource",
 	}
 
 	for pluginID, pluginDir := range bundledPlugins {
@@ -625,7 +626,6 @@ func verifyBundledPluginCatalogue(t *testing.T, pm *PluginManager) {
 	}
 
 	assert.NotNil(t, pm.dataSources["input"])
-	assert.NotNil(t, pm.apps["grafana-plugin-admin-app"])
 }
 
 type fakeBackendPluginManager struct {
@@ -699,9 +699,13 @@ func (f *fakePluginInstaller) Install(ctx context.Context, pluginID, version, pl
 	return nil
 }
 
-func (f *fakePluginInstaller) Uninstall(ctx context.Context, pluginID, pluginPath string) error {
+func (f *fakePluginInstaller) Uninstall(ctx context.Context, pluginPath string) error {
 	f.uninstallCount++
 	return nil
+}
+
+func (f *fakePluginInstaller) GetUpdateInfo(pluginID, version, pluginRepoURL string) (plugins.UpdateInfo, error) {
+	return plugins.UpdateInfo{}, nil
 }
 
 func createManager(t *testing.T, cbs ...func(*PluginManager)) *PluginManager {

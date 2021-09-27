@@ -8,6 +8,9 @@ aliases = ["/docs/grafana/latest/http_api/user/"]
 # User API
 
 > If you are running Grafana Enterprise and have [Fine-grained access control]({{< relref "../enterprise/access-control/_index.md" >}}) enabled, for some endpoints you would need to have relevant permissions.
+> Refer to specific resources to understand what permissions are required.
+
+> If you are running Grafana Enterprise and have [Fine-grained access control]({{< relref "../enterprise/access-control/_index.md" >}}) enabled, for some endpoints you would need to have relevant permissions.
 Refer to specific resources to understand what permissions are required.
  
 ## Search Users
@@ -18,9 +21,9 @@ Refer to specific resources to understand what permissions are required.
 
 See note in the [introduction]({{< ref "#user-api" >}}) for an explanation.
 
-Action | Scope
---- | --- | 
-users:read | global:users:*
+| Action     | Scope           |
+| ---------- | --------------- |
+| users:read | global:users:\* |
 
 **Example Request**:
 
@@ -73,9 +76,9 @@ Content-Type: application/json
 
 See note in the [introduction]({{< ref "#user-api" >}}) for an explanation.
 
-Action | Scope
---- | --- | 
-users:read | global:users:*
+| Action     | Scope           |
+| ---------- | --------------- |
+| users:read | global:users:\* |
 
 **Example Request**:
 
@@ -134,9 +137,9 @@ Content-Type: application/json
 
 See note in the [introduction]({{< ref "#user-api" >}}) for an explanation.
 
-Action | Scope
---- | --- | 
-users:read | users:*
+| Action     | Scope    |
+| ---------- | -------- |
+| users:read | users:\* |
 
 **Example Request**:
 
@@ -146,6 +149,7 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Basic YWRtaW46YWRtaW4=
 ```
+
 Requires basic authentication and that the authenticated user is a Grafana Admin.
 
 **Example Response**:
@@ -179,9 +183,9 @@ Content-Type: application/json
 
 See note in the [introduction]({{< ref "#user-api" >}}) for an explanation.
 
-Action | Scope
---- | --- | 
-users:read | global:users:*
+| Action     | Scope           |
+| ---------- | --------------- |
+| users:read | global:users:\* |
 
 **Example Request using the email as option**:
 
@@ -234,9 +238,9 @@ Content-Type: application/json
 
 See note in the [introduction]({{< ref "#user-api" >}}) for an explanation.
 
-Action | Scope
---- | --- | 
-users:write | users:*
+| Action      | Scope    |
+| ----------- | -------- |
+| users:write | users:\* |
 
 **Example Request**:
 
@@ -273,9 +277,9 @@ Content-Type: application/json
 
 See note in the [introduction]({{< ref "#user-api" >}}) for an explanation.
 
-Action | Scope
---- | --- | 
-users:read | users:*
+| Action     | Scope    |
+| ---------- | -------- |
+| users:read | users:\* |
 
 **Example Request**:
 
@@ -311,9 +315,9 @@ Content-Type: application/json
 
 See note in the [introduction]({{< ref "#user-api" >}}) for an explanation.
 
-Action | Scope
---- | --- | 
-users.teams:read | users:*
+| Action           | Scope    |
+| ---------------- | -------- |
+| users.teams:read | users:\* |
 
 **Example Request**:
 
@@ -343,7 +347,6 @@ Content-Type: application/json
   }
 ]
 ```
-
 
 ## User
 

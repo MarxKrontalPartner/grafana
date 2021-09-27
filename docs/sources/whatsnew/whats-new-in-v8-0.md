@@ -22,7 +22,7 @@ The new alerts in Grafana 8.0 are an opt-in feature that centralizes alerting in
 
 As part of the new alert changes, we have introduced a new data source, Alertmanager, which includes built-in support for Prometheus Alertmanager. It is presently in alpha and it not accessible unless alpha plugins are enabled in Grafana settings. For more information, refer to [Alertmanager data source]({{< relref "../datasources/alertmanager.md" >}}).
 
-> **Note:** Out of the box, Grafana still supports old Grafana alerts. They are legacy alerts at this time, and will be deprecated in a future release. 
+> **Note:** Out of the box, Grafana still supports old Grafana alerts. They are legacy alerts at this time, and will be deprecated in a future release.
 
 To learn more about the differences between new alerts and the legacy alerts, refer to [What's New with Grafana 8 Alerts]({{< relref "../alerting/difference-old-new.md" >}}).
 
@@ -52,7 +52,7 @@ The Bar chart panel is a new visualization that supports categorical data. It on
 
 To use it with time series you first have to add a **Reduce** transform.
 
-For more information, refer to [Bar chart visualization]({{< relref "../panels/visualizations/bar-chart.md" >}}).
+For more information, refer to [Bar chart visualization]({{< relref "../visualizations/bar-chart.md" >}}).
 
 ### State timeline visualization (beta)
 
@@ -66,11 +66,11 @@ Example with string values:
 With time series data and thresholds:
 {{< figure src="/static/img/docs/v8/state_timeline_time_series.png" max-width="800px" caption="state timeline with time series" >}}
 
-For more information, refer to [State timeline visualization]({{< relref "../panels/visualizations/state-timeline.md" >}}).
+For more information, refer to [State timeline visualization]({{< relref "../visualizations/state-timeline.md" >}}).
 
 ### Status history visualization (beta)
 
-A sister panel to the state timeline is the new Status history panel visualization. It can display periodic states in a grid view. It supports both numerical, string, or boolean states. You can assign colors using value mappings, thresholds, or gradient color. For more information, refer to [Status history]({{< relref "../panels/visualizations/status-history.md" >}}).
+A sister panel to the state timeline is the new Status history panel visualization. It can display periodic states in a grid view. It supports both numerical, string, or boolean states. You can assign colors using value mappings, thresholds, or gradient color. For more information, refer to [Status history]({{< relref "../visualizations/status-history.md" >}}).
 schemes.
 
 ![Status grid visualization](/static/img/docs/status-grid/status-grid-8-0.png)
@@ -81,28 +81,28 @@ This hidden feature of the old Graph panel is now a standalone visualization. It
 
 {{< figure src="/static/img/docs/histogram/histogram-8-0.png" max-width="1025px" caption="Histogram example" >}}
 
-For more information, refer to [Histogram]({{< relref "../panels/visualizations/histogram.md" >}})
+For more information, refer to [Histogram]({{< relref "../visualizations/histogram.md" >}})
 
 ### Time series visualization updates
 
 The Time series is out of beta! We are removing the `Beta` tag and graduating the Time series visualization to a stable state.
 
 - **Time series** is now the default visualization option, replacing the **Graph (old)**.
-- The Time series panel now supports stacking. For more information, refer to [Graph stacked time series]({{< relref "../panels/visualizations/time-series/graph-time-series-stacking.md" >}}).
+- The Time series panel now supports stacking. For more information, refer to [Graph stacked time series]({{< relref "../visualizations/time-series/graph-time-series-stacking.md" >}}).
 - You can now add alerts in the Time series panel, just like the old Graph panel.
-- Updated [connect null values]({{< relref "../panels/visualizations/time-series/graph-time-series-as-lines.md#connect-null-values" >}}) options.
+- Updated [connect null values]({{< relref "../visualizations/time-series/graph-time-series-as-lines.md#connect-null-values" >}}) options.
 - We added support for a shared crosshair and a tooltip that’s now smarter when it comes to data display in the tooltip.
 - Various performance improvements.
 
-[Time series panel]({{< relref "../panels/visualizations/time-series/_index.md" >}}) topics have been updated as a result of these changes.
+[Time series panel]({{< relref "../visualizations/time-series/_index.md" >}}) topics have been updated as a result of these changes.
 
 ### Node graph visualization updates
 
-You can now expand the node graph for the displayed trace when using the Trace to logs feature.. Depending on the data source, this can show spans of the trace as nodes in the graph, or as some additional context like service map based on the current trace.
+You can now expand the node graph for the displayed trace when using the Trace to logs feature. Depending on the data source, this can show spans of the trace as nodes in the graph, or as some additional context like service map based on the current trace.
 
 We also added a grid view and the ability to explore hidden nodes.
 
-[Tracing in Explore]({{< relref "../explore/trace-integration.md" >}}) and [Node graph]({{< relref "../panels/visualizations/node-graph.md" >}}) were updated as a result of these changes.
+[Tracing in Explore]({{< relref "../explore/trace-integration.md" >}}) and [Node graph]({{< relref "../visualizations/node-graph.md" >}}) were updated as a result of these changes.
 
 ### Pie chart visualization updates
 
@@ -180,9 +180,9 @@ The Azure Monitor data source now supports Managed Identity for users hosting Gr
 
 Also, in addition to querying Log Analytics Workspaces, you can now query the logs for any individual [supported resource](https://docs.microsoft.com/en-us/azure/azure-monitor/essentials/metrics-supported), or for all resources in a subscription or resource group.
 
-> **Note:** In Grafana 7.5 we started the deprecation for separate Application Insights queries, in favor of querying Application Insights resources through Metrics and Logs. In Grafana 8.0 new Application Insights and Insights Analytics queries cannot be made, and existing queries have been made read-only. For more details, refer to the [Deprecating Application Insights]({{< relref "../datasources/azuremonitor.md#deprecating-application-insights" >}}.
+> **Note:** In Grafana 7.5 we started the deprecation for separate Application Insights queries, in favor of querying Application Insights resources through Metrics and Logs. In Grafana 8.0 new Application Insights and Insights Analytics queries cannot be made, and existing queries have been made read-only. For more details, refer to the [Deprecating Application Insights]({{< relref "../datasources/azuremonitor/_index.md#deprecating-application-insights" >}}.
 
-[Azure Monitor data source]({{< relref "../datasources/azuremonitor.md" >}}) was updated as a result of these changes.
+[Azure Monitor data source]({{< relref "../datasources/azuremonitor/_index.md" >}}) was updated as a result of these changes.
 
 #### Elasticsearch data source
 
@@ -274,6 +274,10 @@ You can now configure generic OAuth with strict parsing of the `role_attribute_p
 
 Support for Singlestat panel has been discontinued. When you upgrade to version 8.0, all existing Singlestat panels automatically becomes Stat panels.
 Stat panel is available as plugin.
+
+### Grafana license update
+
+Grafana has updated its license from Apache 2.0 to the GNU Affero General Public License (AGPL). Please see the related [blog post](https://grafana.com/blog/2021/04/20/grafana-loki-tempo-relicensing-to-agplv3/), [Q&A](https://grafana.com/blog/2021/04/20/qa-with-our-ceo-on-relicensing/) and [license](https://github.com/grafana/grafana/blob/main/LICENSE) for more details.
 
 ## Enterprise features
 

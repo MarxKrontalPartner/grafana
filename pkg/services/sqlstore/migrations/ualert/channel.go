@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sort"
+	"strings"
 
 	"github.com/prometheus/alertmanager/pkg/labels"
 
@@ -85,21 +87,19 @@ func (m *migration) updateReceiverAndRoute(allChannels map[interface{}]*notifica
 		return err
 	}
 
-	amConfig.AlertmanagerConfig.Receivers = append(amConfig.AlertmanagerConfig.Receivers, recv)
-	amConfig.AlertmanagerConfig.Route.Routes = append(amConfig.AlertmanagerConfig.Route.Routes, route)
+	if recv != nil {
+		amConfig.AlertmanagerConfig.Receivers = append(amConfig.AlertmanagerConfig.Receivers, recv)
+	}
+	if route != nil {
+		amConfig.AlertmanagerConfig.Route.Routes = append(amConfig.AlertmanagerConfig.Route.Routes, route)
+	}
 
 	return nil
 }
 
 func (m *migration) makeReceiverAndRoute(ruleUid string, channelUids []interface{}, defaultChannels []*notificationChannel, allChannels map[interface{}]*notificationChannel) (*PostableApiReceiver, *Route, error) {
-	receiverName := getMigratedReceiverNameFromRuleUID(ruleUid)
-
 	portedChannels := []*PostableGrafanaReceiver{}
-	receiver := &PostableApiReceiver{
-		Name: receiverName,
-	}
-
-	addedChannels := map[*notificationChannel]struct{}{}
+	var receiver *PostableApiReceiver
 
 	addChannel := func(c *notificationChannel) error {
 		if c.Type == "hipchat" || c.Type == "sensu" {
@@ -113,40 +113,82 @@ func (m *migration) makeReceiverAndRoute(ruleUid string, channelUids []interface
 		}
 
 		m.migratedChannels[c] = struct{}{}
-		settings, secureSettings := migrateSettingsToSecureSettings(c.Type, c.Settings, c.SecureSettings)
+		settings, decryptedSecureSettings, err := migrateSettingsToSecureSettings(c.Type, c.Settings, c.SecureSettings)
+		if err != nil {
+			return err
+		}
 		portedChannels = append(portedChannels, &PostableGrafanaReceiver{
 			UID:                   uid,
 			Name:                  c.Name,
 			Type:                  c.Type,
 			DisableResolveMessage: c.DisableResolveMessage,
 			Settings:              settings,
-			SecureSettings:        secureSettings,
+			SecureSettings:        decryptedSecureSettings,
 		})
-		addedChannels[c] = struct{}{}
 
 		return nil
 	}
 
-	for _, n := range channelUids {
-		c, ok := allChannels[n]
-		if !ok {
-			continue
+	// Remove obsolete notification channels.
+	filteredChannelUids := make(map[interface{}]struct{})
+	for _, uid := range channelUids {
+		_, ok := allChannels[uid]
+		if ok {
+			filteredChannelUids[uid] = struct{}{}
+		} else {
+			m.mg.Logger.Warn("ignoring obsolete notification channel", "uid", uid)
 		}
-
-		if err := addChannel(c); err != nil {
-			return nil, nil, err
+	}
+	// Add default channels that are not obsolete.
+	for _, c := range defaultChannels {
+		id := interface{}(c.Uid)
+		if c.Uid == "" {
+			id = c.ID
+		}
+		_, ok := allChannels[id]
+		if ok {
+			filteredChannelUids[id] = struct{}{}
 		}
 	}
 
-	for _, c := range defaultChannels {
-		if _, ok := addedChannels[c]; !ok {
-			if err := addChannel(c); err != nil {
+	if len(filteredChannelUids) == 0 && ruleUid != "default_route" {
+		// We use the default route instead. No need to add additional route.
+		return nil, nil, nil
+	}
+
+	chanKey, err := makeKeyForChannelGroup(filteredChannelUids)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var receiverName string
+	if rn, ok := m.portedChannelGroups[chanKey]; ok {
+		// We have ported these exact set of channels already. Re-use it.
+		receiverName = rn
+		if receiverName == "autogen-contact-point-default" {
+			// We don't need to create new routes if it's the default contact point.
+			return nil, nil, nil
+		}
+	} else {
+		for n := range filteredChannelUids {
+			if err := addChannel(allChannels[n]); err != nil {
 				return nil, nil, err
 			}
 		}
-	}
 
-	receiver.GrafanaManagedReceivers = portedChannels
+		if ruleUid == "default_route" {
+			receiverName = "autogen-contact-point-default"
+		} else {
+			m.lastReceiverID++
+			receiverName = fmt.Sprintf("autogen-contact-point-%d", m.lastReceiverID)
+		}
+
+		m.portedChannelGroups[chanKey] = receiverName
+		receiver = &PostableApiReceiver{
+			Name:                    receiverName,
+			GrafanaManagedReceivers: portedChannels,
+		}
+	}
 
 	n, v := getLabelForRouteMatching(ruleUid)
 	mat, err := labels.NewMatcher(labels.MatchEqual, n, v)
@@ -161,7 +203,45 @@ func (m *migration) makeReceiverAndRoute(ruleUid string, channelUids []interface
 	return receiver, route, nil
 }
 
-func (m *migration) updateDefaultAndUnmigratedChannels(amConfig *PostableUserConfig, allChannels map[interface{}]*notificationChannel, defaultChannels []*notificationChannel) error {
+// makeKeyForChannelGroup generates a unique for this group of channels UIDs.
+func makeKeyForChannelGroup(channelUids map[interface{}]struct{}) (string, error) {
+	uids := make([]string, 0, len(channelUids))
+	for u := range channelUids {
+		switch uid := u.(type) {
+		case string:
+			uids = append(uids, uid)
+		case int, int32, int64:
+			uids = append(uids, fmt.Sprintf("%d", uid))
+		default:
+			// Should never happen.
+			return "", fmt.Errorf("unknown channel UID type: %T", u)
+		}
+	}
+
+	sort.Strings(uids)
+	return strings.Join(uids, "::sep::"), nil
+}
+
+// addDefaultChannels should be called before adding any other routes.
+func (m *migration) addDefaultChannels(amConfig *PostableUserConfig, allChannels map[interface{}]*notificationChannel, defaultChannels []*notificationChannel) error {
+	// Default route and receiver.
+	recv, route, err := m.makeReceiverAndRoute("default_route", nil, defaultChannels, allChannels)
+	if err != nil {
+		return err
+	}
+
+	if recv != nil {
+		amConfig.AlertmanagerConfig.Receivers = append(amConfig.AlertmanagerConfig.Receivers, recv)
+	}
+	if route != nil {
+		route.Matchers = nil // Don't need matchers for root route.
+		amConfig.AlertmanagerConfig.Route = route
+	}
+
+	return nil
+}
+
+func (m *migration) addUnmigratedChannels(amConfig *PostableUserConfig, allChannels map[interface{}]*notificationChannel, defaultChannels []*notificationChannel) error {
 	// Unmigrated channels.
 	portedChannels := []*PostableGrafanaReceiver{}
 	receiver := &PostableApiReceiver{
@@ -183,40 +263,23 @@ func (m *migration) updateDefaultAndUnmigratedChannels(amConfig *PostableUserCon
 		}
 
 		m.migratedChannels[c] = struct{}{}
-		settings, secureSettings := migrateSettingsToSecureSettings(c.Type, c.Settings, c.SecureSettings)
+		settings, decryptedSecureSettings, err := migrateSettingsToSecureSettings(c.Type, c.Settings, c.SecureSettings)
+		if err != nil {
+			return err
+		}
 		portedChannels = append(portedChannels, &PostableGrafanaReceiver{
 			UID:                   uid,
 			Name:                  c.Name,
 			Type:                  c.Type,
 			DisableResolveMessage: c.DisableResolveMessage,
 			Settings:              settings,
-			SecureSettings:        secureSettings,
+			SecureSettings:        decryptedSecureSettings,
 		})
 	}
 	receiver.GrafanaManagedReceivers = portedChannels
 	if len(portedChannels) > 0 {
 		amConfig.AlertmanagerConfig.Receivers = append(amConfig.AlertmanagerConfig.Receivers, receiver)
 	}
-
-	// Default route and receiver.
-	var channelUids = []interface{}{}
-	for _, c := range defaultChannels {
-		if c.Uid == "" {
-			channelUids = append(channelUids, c.ID)
-		} else {
-			channelUids = append(channelUids, c.Uid)
-		}
-	}
-
-	recv, route, err := m.makeReceiverAndRoute("default_route", channelUids, defaultChannels, allChannels)
-	if err != nil {
-		return err
-	}
-
-	route.Matchers = nil // Don't need matchers for root route.
-	route.Routes = amConfig.AlertmanagerConfig.Route.Routes
-	amConfig.AlertmanagerConfig.Receivers = append(amConfig.AlertmanagerConfig.Receivers, recv)
-	amConfig.AlertmanagerConfig.Route = route
 
 	return nil
 }
@@ -236,7 +299,7 @@ func (m *migration) generateChannelUID() (string, bool) {
 // Some settings were migrated from settings to secure settings in between.
 // See https://grafana.com/docs/grafana/latest/installation/upgrading/#ensure-encryption-of-existing-alert-notification-channel-secrets.
 // migrateSettingsToSecureSettings takes care of that.
-func migrateSettingsToSecureSettings(chanType string, settings *simplejson.Json, secureSettings securejsondata.SecureJsonData) (*simplejson.Json, map[string]string) {
+func migrateSettingsToSecureSettings(chanType string, settings *simplejson.Json, secureSettings securejsondata.SecureJsonData) (*simplejson.Json, map[string]string, error) {
 	keys := []string{}
 	switch chanType {
 	case "slack":
@@ -259,24 +322,28 @@ func migrateSettingsToSecureSettings(chanType string, settings *simplejson.Json,
 		keys = []string{"api_secret"}
 	}
 
-	ss := secureSettings.Decrypt()
+	decryptedSecureSettings := secureSettings.Decrypt()
+	cloneSettings := simplejson.New()
+	settingsMap, err := settings.Map()
+	if err != nil {
+		return nil, nil, err
+	}
+	for k, v := range settingsMap {
+		cloneSettings.Set(k, v)
+	}
 	for _, k := range keys {
-		if v, ok := ss[k]; ok && v != "" {
+		if v, ok := decryptedSecureSettings[k]; ok && v != "" {
 			continue
 		}
 
-		sv := settings.Get(k).MustString()
+		sv := cloneSettings.Get(k).MustString()
 		if sv != "" {
-			ss[k] = sv
-			settings.Del(k)
+			decryptedSecureSettings[k] = sv
+			cloneSettings.Del(k)
 		}
 	}
 
-	return settings, ss
-}
-
-func getMigratedReceiverNameFromRuleUID(ruleUID string) string {
-	return fmt.Sprintf("autogen-panel-recv-%s", ruleUID)
+	return cloneSettings, decryptedSecureSettings, nil
 }
 
 func getLabelForRouteMatching(ruleUID string) (string, string) {

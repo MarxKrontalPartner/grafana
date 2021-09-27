@@ -62,6 +62,10 @@
         "type": "object",
         "additionalItems": false,
         "properties": {
+          "uid": {
+            "type": "string",
+            "description": "Unique identifier of the included resource"
+          },
           "type": {
             "type": "string",
             "enum": ["dashboard", "page", "panel", "datasource"]
@@ -297,7 +301,7 @@
         "version": {
           "type": "string",
           "description": "Project version of this commit, e.g. `6.7.x`.",
-          "pattern": "^([0-9x]+\\.[0-9x]+\\.*[0-9x]*$|\\%VERSION\\%)"
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*$|\\%VERSION\\%)"
         }
       }
     },

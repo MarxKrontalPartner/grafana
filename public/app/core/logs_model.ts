@@ -9,6 +9,7 @@ import {
   dateTimeFormat,
   dateTimeFormatTimeAgo,
   FieldCache,
+  FieldColorModeId,
   FieldType,
   FieldWithIndex,
   findCommonLabels,
@@ -31,6 +32,7 @@ import { getThemeColor } from 'app/core/utils/colors';
 import { SIPrefix } from '@grafana/data/src/valueFormats/symbolFormatters';
 
 export const LIMIT_LABEL = 'Line limit';
+export const COMMON_LABELS = 'Common labels';
 
 export const LogLevelColor = {
   [LogLevel.critical]: colors[7],
@@ -141,6 +143,10 @@ export function makeDataFramesForLogs(sortedRows: LogRowModel[], bucketSize: num
 
     data.fields[valueField.index].config.min = 0;
     data.fields[valueField.index].config.decimals = 0;
+    data.fields[valueField.index].config.color = {
+      mode: FieldColorModeId.Fixed,
+      fixedColor: series.color,
+    };
 
     data.fields[valueField.index].config.custom = {
       drawStyle: DrawStyle.Bars,
@@ -395,7 +401,7 @@ export function logSeriesToLogsModel(logSeries: DataFrame[]): LogsModel | undefi
   const meta: LogsMetaItem[] = [];
   if (size(commonLabels) > 0) {
     meta.push({
-      label: 'Common labels',
+      label: COMMON_LABELS,
       value: commonLabels,
       kind: LogsMetaKind.LabelsMap,
     });

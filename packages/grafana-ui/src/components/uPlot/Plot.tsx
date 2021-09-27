@@ -1,7 +1,7 @@
 import React, { createRef, MutableRefObject } from 'react';
 import uPlot, { Options } from 'uplot';
 import { PlotContext, PlotContextType } from './context';
-import { DEFAULT_PLOT_CONFIG } from './utils';
+import { DEFAULT_PLOT_CONFIG, pluginLog } from './utils';
 import { PlotProps } from './types';
 
 function sameDims(prevProps: PlotProps, nextProps: PlotProps) {
@@ -73,6 +73,7 @@ export class UPlotChart extends React.Component<PlotProps, UPlotChartState> {
       ...this.props.config.getConfig(),
     };
 
+    pluginLog('UPlot', false, 'Reinitializing plot', config);
     const plot = new uPlot(config, this.props.data, this.plotContainer!.current!);
 
     if (plotRef) {
@@ -96,15 +97,6 @@ export class UPlotChart extends React.Component<PlotProps, UPlotChartState> {
     this.state.ctx.plot?.destroy();
   }
 
-  shouldComponentUpdate(nextProps: PlotProps, nextState: UPlotChartState) {
-    return (
-      nextState.ctx !== this.state.ctx ||
-      !sameDims(this.props, nextProps) ||
-      !sameData(this.props, nextProps) ||
-      !sameConfig(this.props, nextProps)
-    );
-  }
-
   componentDidUpdate(prevProps: PlotProps) {
     let { ctx } = this.state;
 
@@ -117,6 +109,14 @@ export class UPlotChart extends React.Component<PlotProps, UPlotChartState> {
       this.reinitPlot();
     } else if (!sameData(prevProps, this.props)) {
       ctx.plot?.setData(this.props.data);
+
+      // this is a uPlot cache-busting hack for bar charts in case x axis labels changed
+      // since the x scale's "range" doesnt change, the axis size doesnt get recomputed, which is where the tick labels are regenerated & cached
+      // the more expensive, more proper/thorough way to do this is to force all axes to recalc: plot?.redraw(false, true);
+      if (ctx.plot && typeof this.props.data[0][0] === 'string') {
+        //@ts-ignore
+        ctx.plot.axes[0]._values = this.props.data[0];
+      }
     }
   }
 

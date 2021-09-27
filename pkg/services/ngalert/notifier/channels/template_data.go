@@ -29,6 +29,7 @@ type ExtendedAlert struct {
 	SilenceURL   string      `json:"silenceURL"`
 	DashboardURL string      `json:"dashboardURL"`
 	PanelURL     string      `json:"panelURL"`
+	ValueString  string      `json:"valueString"`
 }
 
 type ExtendedAlerts []ExtendedAlert
@@ -86,6 +87,14 @@ func extendAlert(alert template.Alert, externalURL string, logger log.Logger) *E
 			extended.PanelURL = u.String()
 		}
 	}
+
+	if alert.Annotations != nil {
+		extended.ValueString = alert.Annotations[`__value_string__`]
+	}
+	sort.Strings(matchers)
+	u.Path = path.Join(externalPath, "/alerting/silence/new")
+	u.RawQuery = "alertmanager=grafana&matchers=" + url.QueryEscape(strings.Join(matchers, ","))
+	extended.SilenceURL = u.String()
 
 	matchers := make([]string, 0)
 	for key, value := range alert.Labels {

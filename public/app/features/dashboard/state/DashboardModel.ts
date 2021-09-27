@@ -41,7 +41,7 @@ import { variableAdapters } from 'app/features/variables/adapters';
 import { onTimeRangeUpdated } from 'app/features/variables/state/actions';
 import { dispatch } from '../../../store/store';
 import { isAllVariable } from '../../variables/utils';
-import { DashboardPanelsChangedEvent, RefreshEvent, RenderEvent } from 'app/types/events';
+import { DashboardPanelsChangedEvent, RefreshEvent, RenderEvent, TimeRangeUpdatedEvent } from 'app/types/events';
 import { getTimeSrv } from '../services/TimeSrv';
 
 export interface CloneOptions {
@@ -318,7 +318,7 @@ export class DashboardModel {
   }
 
   timeRangeUpdated(timeRange: TimeRange) {
-    this.events.emit(CoreEvents.timeRangeUpdated, timeRange);
+    this.events.publish(new TimeRangeUpdatedEvent(timeRange));
     dispatch(onTimeRangeUpdated(timeRange));
   }
 
@@ -714,9 +714,11 @@ export class DashboardModel {
         panelBelowIndex = insertPos + rowPanels.length;
       }
 
-      // Update gridPos for panels below
-      for (let i = panelBelowIndex; i < this.panels.length; i++) {
-        this.panels[i].gridPos.y += yPos;
+      // Update gridPos for panels below if we inserted more than 1 repeated row panel
+      if (selectedOptions.length > 1) {
+        for (let i = panelBelowIndex; i < this.panels.length; i++) {
+          this.panels[i].gridPos.y += yPos;
+        }
       }
     }
   }
@@ -752,7 +754,7 @@ export class DashboardModel {
     const maxPos = maxBy(positions, (pos: GridPos) => {
       return pos.y + pos.h;
     });
-    return maxPos.y + maxPos.h - rowYPos;
+    return maxPos!.y + maxPos!.h - rowYPos;
   }
 
   removePanel(panel: PanelModel) {
@@ -1051,17 +1053,22 @@ export class DashboardModel {
     this.events.emit(CoreEvents.templateVariableValueUpdated);
   }
 
-  expandParentRowFor(panelId: number) {
+  getPanelByUrlId(panelUrlId: string) {
+    const panelId = parseInt(panelUrlId ?? '0', 10);
+
+    // First try to find it in a collapsed row and exand it
     for (const panel of this.panels) {
       if (panel.collapsed) {
         for (const rowPanel of panel.panels) {
           if (rowPanel.id === panelId) {
             this.toggleRow(panel);
-            return;
+            break;
           }
         }
       }
     }
+
+    return this.getPanelById(panelId);
   }
 
   toggleLegendsForAll() {

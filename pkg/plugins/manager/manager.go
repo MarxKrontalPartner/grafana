@@ -516,6 +516,7 @@ func (pm *PluginManager) loadPlugin(jsonParser *json.Decoder, pluginBase *plugin
 	pb.Signature = pluginBase.Signature
 	pb.SignatureType = pluginBase.SignatureType
 	pb.SignatureOrg = pluginBase.SignatureOrg
+	pb.SignedFiles = pluginBase.SignedFiles
 
 	pm.plugins[pb.Id] = pb
 	pm.log.Debug("Successfully added plugin", "id", pb.Id)
@@ -585,6 +586,7 @@ func (s *PluginScanner) loadPlugin(pluginJSONFilePath string) error {
 	pluginCommon.Signature = signatureState.Status
 	pluginCommon.SignatureType = signatureState.Type
 	pluginCommon.SignatureOrg = signatureState.SigningOrg
+	pluginCommon.SignedFiles = signatureState.Files
 
 	s.plugins[currentDir] = &pluginCommon
 
@@ -726,6 +728,8 @@ func (pm *PluginManager) StaticRoutes() []*plugins.PluginStaticRoute {
 
 func (pm *PluginManager) Install(ctx context.Context, pluginID, version string) error {
 	plugin := pm.GetPlugin(pluginID)
+
+	var pluginZipURL string
 	if plugin != nil {
 		if plugin.IsCorePlugin {
 			return plugins.ErrInstallCorePlugin
@@ -738,14 +742,22 @@ func (pm *PluginManager) Install(ctx context.Context, pluginID, version string) 
 			}
 		}
 
+		// get plugin update information to confirm if upgrading is possible
+		updateInfo, err := pm.pluginInstaller.GetUpdateInfo(pluginID, version, grafanaComURL)
+		if err != nil {
+			return err
+		}
+
+		pluginZipURL = updateInfo.PluginZipURL
+
 		// remove existing installation of plugin
-		err := pm.Uninstall(context.Background(), plugin.Id)
+		err = pm.Uninstall(context.Background(), plugin.Id)
 		if err != nil {
 			return err
 		}
 	}
 
-	err := pm.pluginInstaller.Install(ctx, pluginID, version, pm.Cfg.PluginsPath, "", grafanaComURL)
+	err := pm.pluginInstaller.Install(ctx, pluginID, version, pm.Cfg.PluginsPath, pluginZipURL, grafanaComURL)
 	if err != nil {
 		return err
 	}
@@ -786,7 +798,7 @@ func (pm *PluginManager) Uninstall(ctx context.Context, pluginID string) error {
 		return err
 	}
 
-	return pm.pluginInstaller.Uninstall(ctx, pluginID, pm.Cfg.PluginsPath)
+	return pm.pluginInstaller.Uninstall(ctx, plugin.PluginDir)
 }
 
 func (pm *PluginManager) unregister(plugin *plugins.PluginBase) error {

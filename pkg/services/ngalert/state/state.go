@@ -13,6 +13,7 @@ type State struct {
 	OrgID              int64
 	CacheId            string
 	State              eval.State
+	Resolved           bool
 	Results            []Evaluation
 	StartsAt           time.Time
 	EndsAt             time.Time
@@ -28,9 +29,31 @@ type Evaluation struct {
 	EvaluationTime   time.Time
 	EvaluationState  eval.State
 	EvaluationString string
+	// Values contains the RefID and value of reduce and math expressions.
+	// It does not contain values for classic conditions as the values
+	// in classic conditions do not have a RefID.
+	Values map[string]EvaluationValue
 }
 
-func (a *State) resultNormal(result eval.Result) {
+// EvaluationValue contains the labels and value for a RefID in an evaluation.
+type EvaluationValue struct {
+	Labels data.Labels
+	Value  *float64
+}
+
+// NewEvaluationValues returns the labels and values for each RefID in the capture.
+func NewEvaluationValues(m map[string]eval.NumberValueCapture) map[string]EvaluationValue {
+	result := make(map[string]EvaluationValue, len(m))
+	for k, v := range m {
+		result[k] = EvaluationValue{
+			Labels: v.Labels,
+			Value:  v.Value,
+		}
+	}
+	return result
+}
+
+func (a *State) resultNormal(alertRule *ngModels.AlertRule, result eval.Result) {
 	if a.State != eval.Normal {
 		a.EndsAt = result.EvaluatedAt
 		a.StartsAt = result.EvaluatedAt
@@ -90,10 +113,13 @@ func (a *State) resultNoData(alertRule *ngModels.AlertRule, result eval.Result) 
 }
 
 func (a *State) NeedsSending(resendDelay time.Duration) bool {
-	if a.State != eval.Alerting {
+	if a.State != eval.Alerting && a.State != eval.Normal {
 		return false
 	}
 
+	if a.State == eval.Normal && !a.Resolved {
+		return false
+	}
 	// if LastSentAt is before or equal to LastEvaluationTime + resendDelay, send again
 	return a.LastSentAt.Add(resendDelay).Before(a.LastEvaluationTime) ||
 		a.LastSentAt.Add(resendDelay).Equal(a.LastEvaluationTime)
@@ -125,12 +151,15 @@ func (a *State) TrimResults(alertRule *ngModels.AlertRule) {
 	a.Results = newResults
 }
 
+// setEndsAt sets the ending timestamp of the alert.
+// The internal Alertmanager will use this time to know when it should automatically resolve the alert
+// in case it hasn't received additional alerts. Under regular operations the scheduler will continue to send the
+// alert with an updated EndsAt, if the alert is resolved then a last alert is sent with EndsAt = last evaluation time.
 func (a *State) setEndsAt(alertRule *ngModels.AlertRule, result eval.Result) {
-	if int64(alertRule.For.Seconds()) > alertRule.IntervalSeconds {
-		// For is set and longer than IntervalSeconds
-		a.EndsAt = result.EvaluatedAt.Add(alertRule.For)
-	} else {
-		// For is not set or is less than or equal to IntervalSeconds
-		a.EndsAt = result.EvaluatedAt.Add(time.Duration(alertRule.IntervalSeconds*2) * time.Second)
+	ends := ResendDelay
+	if alertRule.IntervalSeconds > int64(ResendDelay.Seconds()) {
+		ends = time.Duration(alertRule.IntervalSeconds)
 	}
+
+	a.EndsAt = result.EvaluatedAt.Add(ends * 3)
 }
