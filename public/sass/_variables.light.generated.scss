@@ -20,8 +20,8 @@ $blue-base: #12a5e2;
 $blue-shade: rgb(14, 132, 180);
 $red-base: #c51f3d;
 $red-shade: rgb(157, 24, 48);
-$green-base: #a39c0e;
-$green-shade: rgb(130, 124, 11);
+$green-base: #1A7F4B;
+$green-shade: rgb(20, 101, 60);
 $orange-dark: #ff780a;
 
 $gray98: #f7f8fa;
@@ -71,18 +71,18 @@ $purple: #9933cc;
 $variable: #0465d7;
 
 $brand-primary: #eb7b18;
-$brand-success: #a39c0e;
+$brand-success: #1A7F4B;
 $brand-warning: #c51f3d;
 $brand-danger: #c51f3d;
 
 $query-red: #CF0E5B;
-$query-green: #a39c0e;
+$query-green: #1A7F4B;
 $query-purple: #fe85fc;
 $query-orange: #eb7b18;
 
 // Status colors
 // -------------------------
-$online: #a39c0e;
+$online: #1A7F4B;
 $warn: #BD4B00;
 $critical: #CF0E5B;
 
@@ -271,10 +271,10 @@ $tab-border-color: $gray-5;
 // -------------------------
 $warning-text-color: #BD4B00;
 $error-text-color: #CF0E5B;
-$success-text-color: #a39c0e;
+$success-text-color: #1A7F4B;
 
 $alert-error-bg: #c51f3d;
-$alert-success-bg: #a39c0e;
+$alert-success-bg: #1A7F4B;
 $alert-warning-bg: #c51f3d;
 $alert-info-bg: #c51f3d;
 
@@ -312,6 +312,10 @@ $info-box-border-color: $blue-base;
 // footer
 $footer-link-color: $gray-3;
 $footer-link-hover: $dark-2;
+
+// login page footer
+$footer-login-page-link-color: white;
+$footer-login-page-link-hover: #c6c6c6;
 
 // json explorer
 $json-explorer-default-color: black;
